@@ -1,10 +1,8 @@
 version: '3'
 
-
-
 services:
   zookeeper:
-      image: confluentinc/cp-zookeeper: 7.4.0
+      image: confluentinc/cp-zookeeper:7.4.0
       container_name: zookeeper
       ports :
         - "2181:2181"
@@ -21,7 +19,7 @@ services:
 
 
   broker:
-      image: confluentinc/cp-server: 7.4.0
+      image: confluentinc/cp-server:7.4.0
       container_name: broker
       hostname: broker
       depends_on:
@@ -50,14 +48,14 @@ services:
         CONFLUENT_SUPPORT_METRICS_ID: 'anonymous'
       networks:
         - confluent
-      healthcheck :configs:
-        test: ["CMD",bash , "-c",  "nc -z localhost 9092"]
-        interval : 10s
-        timeout : 5s
-        retries : 5
+      healthcheck:
+        test: ["CMD", "bash", "-c", "nc -z localhost 9092"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
   
   schema-registry:
-      image: confluentinc/cp-schema-registry: 7.4.0
+      image: confluentinc/cp-schema-registry:7.4.0
       container_name: schema-registry
       hostname: schema-registry
       depends_on:
@@ -73,11 +71,11 @@ services:
         - confluent
       healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:8081"]
-        interval: 10s 
+        interval: 0s 
         timeout: 5s
         retries: 5
   control-center :
-      image: confluentinc/cp-enterprise-control-center: 7.4.0
+      image: confluentinc/cp-enterprise-control-center:7.4.0
       hostname : control-center
       container_name: control-center
       depends_on:
@@ -93,4 +91,12 @@ services:
         CONTROL_CENTER_METRICS_ENABLE: 'false'
         PORT: 9021
       networks:
-        -confluent 
+        - confluent
+      healthcheck:
+        test: [ "CMD", "curl", "-f", "http://localhost:9021/health" ]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    
+networks:
+  confluent:
