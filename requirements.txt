@@ -2,3 +2,4 @@ apache-airflow
 confluent-kafka
 requests
 kafka-python
+six
